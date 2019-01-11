@@ -14,10 +14,10 @@ namespace API.Repositories.PlayerRepo
         void deletePlayer(int id);
         
         // Gets all games where pid1 & pid2 are in the same team
-        IEnumerable<TeammatesDTO> getTeammates(int pid, int pid2);
+        TeammatesDTO getTeammates(int pid, int pid2);
 
-        // Gets best teammates over all 
-        IEnumerable<TeammatesDTO> getBestTeammates();
+        // Gets best teammates for a chosen player over all and all their games
+        TeammatesDTO getBestTeammates(int pid);
         
     }
 }

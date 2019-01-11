@@ -88,8 +88,11 @@ namespace API.Repositories.PlayerRepo
             return player;
         }
 
-        public IEnumerable<TeammatesDTO> getTeammates(int pid1, int pid2) 
+        public TeammatesDTO getTeammates(int pid1, int pid2) 
         {
+            int wins = 0;
+            int losses = 0;
+
             var p1 = getPlayerById(pid1);
             var p2 = getPlayerById(pid2);
 
@@ -98,46 +101,64 @@ namespace API.Repositories.PlayerRepo
 
             var games = (from g1 in pid1Games join g2 in pid2Games
                         on g1.gid equals g2.gid
-                        where (g1.teamOne == true && g2.teamOne == true) ||                  (g1.teamTwo == true && g2.teamTwo == true)
-                        select new TeammatesDTO
+                        where (g1.teamOne == true && g2.teamOne == true) || (g1.teamTwo == true && g2.teamTwo == true)
+                        select new TeammatesGames
                         {
                             gid = g1.gid,
-                            p1 = p1.name,
-                            p2 = p2.name,
                             teamOneScore = g1.teamOneScore,
                             teamTwoScore = g1.teamTwoScore,
                             teamOne = g1.teamOne,
                             teamTwo = g1.teamTwo,
                             victory = false
                         }).ToList();
-
-            
-
-            foreach(TeammatesDTO g in games)
+        
+            foreach(TeammatesGames g in games)
             {
-
                 g.teamOneList = getTeamOneList(g);
                 g.teamTwoList = getTeamTwoList(g);
                 
                 if(g.teamOne)
                 {
-                    if(g.teamOneScore > g.teamTwoScore)                
-                        g.victory = true;                    
+                    if(g.teamOneScore > g.teamTwoScore)
+                    {
+                        g.victory = true;
+                        wins++;                  
+                    }                
                     else
+                    {
                         g.victory = false;
+                        losses++;
+                    }
                 }
                 else if(g.teamTwo)
                 {
                     if(g.teamTwoScore > g.teamOneScore)
+                    {
                         g.victory = true;
+                        wins++;
+                    }
                     else
+                    {
                         g.victory = false;
+                        losses++;
+                    }
                 }
             }
-            return games;
+
+            var teammates = new TeammatesDTO
+            {
+                p1 = p1.name,
+                p2 = p2.name,
+                wins = wins,
+                losses = losses,
+                count = games.Count,
+                TeammatesGames = games
+            };
+
+            return teammates;
         }
 
-        public List<string> getTeamOneList(TeammatesDTO model)
+        public List<string> getTeamOneList(TeammatesGames model)
         {
             var nameList = new List<string>();
 
@@ -154,7 +175,7 @@ namespace API.Repositories.PlayerRepo
             return nameList;
         }
 
-        public List<string> getTeamTwoList(TeammatesDTO model)
+        public List<string> getTeamTwoList(TeammatesGames model)
         {
             var nameList = new List<string>();
 
@@ -171,6 +192,8 @@ namespace API.Repositories.PlayerRepo
             return nameList;
         }
 
+
+        // helper function to find gameInfoByPid
         public IEnumerable<GameInfoDTO> getAllGameInfoByPid(int pid)
         {
             var gameInfo = (from g in _db.GamesWon
@@ -210,9 +233,29 @@ namespace API.Repositories.PlayerRepo
             }
         }
 
-        public IEnumerable<TeammatesDTO> getBestTeammates()
+        public TeammatesDTO getBestTeammates(int pid)
         {
-            return null;
+            var nrOfPlayers = getAllPlayers();
+            var player = getPlayerById(pid);
+
+            var wins = 0;
+            TeammatesDTO tempTeammates = new TeammatesDTO();
+
+            for(int i = 1; i <= nrOfPlayers.Count(); i++)
+            {
+                if(i == pid)
+                    continue;
+                
+                var games = getTeammates(pid, i);
+                int temp = games.wins;
+                if(temp > wins)
+                {
+                    wins = games.wins;                
+                    tempTeammates = games;
+                }
+            }
+
+            return tempTeammates;
         }
     }
 }

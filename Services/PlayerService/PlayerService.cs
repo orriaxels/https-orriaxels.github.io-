@@ -72,11 +72,18 @@ namespace API.Services.PlayerService
             _playerRepository.deletePlayer(id);
         }
 
-        public IEnumerable<TeammatesDTO> getTeammates(int pid, int pid2)
+        public TeammatesDTO getTeammates(int pid, int pid2)
         {
             var games = _playerRepository.getTeammates(pid, pid2);
 
             return games;            
+        }
+
+        public TeammatesDTO getBestTeammates(int pid)
+        {
+            var games = _playerRepository.getBestTeammates(pid);
+
+            return games;
         }
 
     }

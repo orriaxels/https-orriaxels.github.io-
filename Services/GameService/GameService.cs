@@ -35,5 +35,12 @@ namespace API.Services.GameService
 
            return game;
         }
+        
+        public IEnumerable<GameInfoDTO> getAllGameInfo()
+        {
+            var games = _gameRepository.getAllGameInfo();
+
+            return games;
+        }
     }
 }

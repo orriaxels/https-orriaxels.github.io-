@@ -7,8 +7,8 @@ namespace API.Models.EntityModels
     public int ID { get; set; }
     public int gid { get; set; } // gameID
     public int pid { get; set; } // playerID
-    public int teamOneScore { get; set; } // how many games teamOne won
-    public int teamTwoScore { get; set; } // how many games teamTwo won
+    public int teamOneScore { get; set; } // how many games teamOne won that night
+    public int teamTwoScore { get; set; } // how many games teamTwo won that night
     public string result { get; set; } // result represented by a char "w", "l", "d"
     public bool teamOne { get; set; } // true if pid was in teamOne
     public bool teamTwo { get; set; } // true if pid was in teamTwo

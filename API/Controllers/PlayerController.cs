@@ -54,7 +54,17 @@ namespace API.Controllers
         [Route("api/players/{pid1:int}/{pid2:int}", Name = "GetTeammatesGames")]
         public IActionResult GetTeammatesGames(int pid1, int pid2)
         {        
-            IEnumerable<TeammatesDTO> games = _playerService.getTeammates(pid1, pid2);
+            TeammatesDTO games = _playerService.getTeammates(pid1, pid2);
+
+            return Ok(games);
+
+        }
+
+        [HttpGet]
+        [Route("api/players/bestteammate/{pid:int}", Name = "GetBestTeammate")]
+        public IActionResult GetBestTeammate(int pid)
+        {        
+            TeammatesDTO games = _playerService.getBestTeammates(pid);
 
             return Ok(games);
 

@@ -47,6 +47,17 @@ namespace API.Controllers
             
             return Ok(game);
         }
+        
+        [HttpGet]
+        [Route("api/gameinfo/", Name = "GetAllGameInfo")]
+        public IActionResult GetAllGameInfo()
+        {
+            IEnumerable<GameInfoDTO> games;
+
+            games = _gameService.getAllGameInfo();            
+
+            return Ok(games);
+        }
     }
 
 

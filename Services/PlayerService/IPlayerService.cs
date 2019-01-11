@@ -13,6 +13,7 @@ namespace API.Services.PlayerService
          PlayerDTO editPlayer(int id, EditPlayerViewModel playerToBeEdited);
          PlayerDTO getPlayerById(int id);
          void deletePlayer(int id);
-         IEnumerable<TeammatesDTO> getTeammates(int pid, int pid2);
+         TeammatesDTO getTeammates(int pid, int pid2);
+         TeammatesDTO getBestTeammates(int pid);
     }
 }
