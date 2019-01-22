@@ -12,8 +12,7 @@ namespace API.Repositories.PlayerRepo
     public class PlayerRepository : IPlayerRepository
     {
 
-        private AppDataContext _db;
-        private IGameRepository _gameRepo;
+        private AppDataContext _db;        
 
         public PlayerRepository(AppDataContext db)
         {
@@ -233,7 +232,7 @@ namespace API.Repositories.PlayerRepo
             }
         }
 
-        public TeammatesDTO getBestTeammates(int pid)
+        public TeammatesDTO getBestTeammate(int pid)
         {
             var nrOfPlayers = getAllPlayers();
             var player = getPlayerById(pid);
@@ -252,6 +251,84 @@ namespace API.Repositories.PlayerRepo
                 {
                     wins = games.wins;                
                     tempTeammates = games;
+                }
+            }
+
+            return tempTeammates;
+        }
+
+        public TeammatesDTO getWorstTeammate(int pid)
+        {
+            var nrOfPlayers = getAllPlayers();
+            var player = getPlayerById(pid);
+
+            var losses = 0;
+            TeammatesDTO tempTeammates = new TeammatesDTO();
+
+            for(int i = 1; i <= nrOfPlayers.Count(); i++)
+            {
+                if(i == pid)
+                    continue;
+                
+                var games = getTeammates(pid, i);
+                int temp = games.losses;
+                if(temp > losses)
+                {
+                    losses = games.losses;                
+                    tempTeammates = games;
+                }
+            }
+
+            return tempTeammates;
+        }
+
+        public TeammatesDTO overallBestTeammates()
+        {
+            var nrOfPlayers = getAllPlayers();
+
+            var wins = 0;
+            TeammatesDTO tempTeammates = new TeammatesDTO();
+            for(int i = 1; i <= nrOfPlayers.Count(); i++)
+            {
+                for(int j = 1; j <= nrOfPlayers.Count(); j++)
+                {   
+                    if(i == j)
+                        continue;
+                    
+                    var games = getTeammates(i, j);
+                    int temp = games.wins;
+                    if(temp > wins)
+                    {
+                        wins = games.wins;                
+                        tempTeammates = games;
+                    }
+                }
+            }
+
+
+            return tempTeammates;
+        }
+
+        public TeammatesDTO overallWorstTeammates()
+        {
+            var nrOfPlayers = getAllPlayers();
+
+            var losses = 0;
+            TeammatesDTO tempTeammates = new TeammatesDTO();
+            for(int i = 1; i <= nrOfPlayers.Count(); i++)
+            {
+                for(int j = 1; j <= nrOfPlayers.Count(); j++)
+                {   
+                    if(i == j)
+                        continue;
+                    
+                    var games = getTeammates(i, j);
+                    int temp = games.losses;
+                    if(temp > losses)
+                    {
+                        losses = games.losses;                
+                        tempTeammates = games;
+                    }
                 }
             }
 

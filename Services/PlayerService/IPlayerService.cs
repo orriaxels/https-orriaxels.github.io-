@@ -14,6 +14,9 @@ namespace API.Services.PlayerService
          PlayerDTO getPlayerById(int id);
          void deletePlayer(int id);
          TeammatesDTO getTeammates(int pid, int pid2);
-         TeammatesDTO getBestTeammates(int pid);
+         TeammatesDTO getBestTeammate(int pid);
+         TeammatesDTO getWorstTeammate(int pid);
+         TeammatesDTO overallBestTeammates();
+         TeammatesDTO overallWorstTeammates();
     }
 }

@@ -7,6 +7,7 @@ using API.Models.ViewModels;
 using API.Models.EntityModels;
 using API.Services.PlayerService;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers
 {
@@ -31,6 +32,7 @@ namespace API.Controllers
 
         // GET api/values/5
         [HttpGet]
+        [Authorize]
         [Route("api/players", Name = "GetAllPlayers")]
         public IActionResult GetAllPlayers()
         {
@@ -57,17 +59,43 @@ namespace API.Controllers
             TeammatesDTO games = _playerService.getTeammates(pid1, pid2);
 
             return Ok(games);
-
         }
 
         [HttpGet]
         [Route("api/players/bestteammate/{pid:int}", Name = "GetBestTeammate")]
         public IActionResult GetBestTeammate(int pid)
         {        
-            TeammatesDTO games = _playerService.getBestTeammates(pid);
+            TeammatesDTO games = _playerService.getBestTeammate(pid);
 
             return Ok(games);
+        }
 
+        [HttpGet]
+        [Route("api/players/worstteammate/{pid:int}", Name = "GetWorstTeammate")]
+        public IActionResult GetWorstTeammate(int pid)
+        {        
+            TeammatesDTO games = _playerService.getWorstTeammate(pid);
+
+            return Ok(games);
+        }
+
+
+        [HttpGet]
+        [Route("api/players/overallbestteammates/", Name = "GetBestOverallTeammates")]
+        public IActionResult GetOverallBestTeammates()
+        {        
+            TeammatesDTO games = _playerService.overallBestTeammates();
+
+            return Ok(games);
+        }
+
+        [HttpGet]
+        [Route("api/players/overallworstteammates/", Name = "GetworstOverallTeammates")]
+        public IActionResult GetOverallWorstTeammates()
+        {        
+            TeammatesDTO games = _playerService.overallWorstTeammates();
+
+            return Ok(games);
         }
 
         [HttpPut]

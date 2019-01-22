@@ -79,9 +79,30 @@ namespace API.Services.PlayerService
             return games;            
         }
 
-        public TeammatesDTO getBestTeammates(int pid)
+        public TeammatesDTO getBestTeammate(int pid)
         {
-            var games = _playerRepository.getBestTeammates(pid);
+            var games = _playerRepository.getBestTeammate(pid);
+
+            return games;
+        }
+
+        public TeammatesDTO getWorstTeammate(int pid)
+        {
+            var games = _playerRepository.getWorstTeammate(pid);
+
+            return games;
+        }
+
+        public TeammatesDTO overallBestTeammates()
+        {
+            var games = _playerRepository.overallBestTeammates();
+
+            return games;
+        }
+
+        public TeammatesDTO overallWorstTeammates()
+        {
+            var games = _playerRepository.overallWorstTeammates();
 
             return games;
         }

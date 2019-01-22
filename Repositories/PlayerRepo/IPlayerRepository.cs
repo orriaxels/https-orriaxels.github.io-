@@ -16,8 +16,16 @@ namespace API.Repositories.PlayerRepo
         // Gets all games where pid1 & pid2 are in the same team
         TeammatesDTO getTeammates(int pid, int pid2);
 
-        // Gets best teammates for a chosen player over all and all their games
-        TeammatesDTO getBestTeammates(int pid);
+        // Gets best teammate for a chosen player overall and all their games
+        TeammatesDTO getBestTeammate(int pid);
+        // Gets worst teammate for a chosen player overall and all their games
+        TeammatesDTO getWorstTeammate(int pid);
+
+        // Gets best teammates overall and their games
+        TeammatesDTO overallBestTeammates();
+
+        // Gets worst teammates overall and their games
+        TeammatesDTO overallWorstTeammates();
         
     }
 }
