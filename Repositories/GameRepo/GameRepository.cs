@@ -27,7 +27,7 @@ namespace API.Repositories.GameRepo
                         select new GameDTO
                         {
                             ID = g.ID,
-                            date = g.date,
+                            date = g.date.Date,
                             teamOneWin = g.teamOneWin,
                             teamTwoWin = g.teamTwoWin
                         }).ToList();
@@ -37,9 +37,11 @@ namespace API.Repositories.GameRepo
 
         public GameDTO addGame(GameViewModel newGame)
         {
+            DateTime today = new DateTime(2019, 12,24,17,47,00);
+            today = today.Date;
             var gameEntity = new Game
             {
-                date = newGame.date,
+                date = today.Date,
                 teamOneWin = false,
                 teamTwoWin = false,
                 draw = false,

@@ -1,11 +1,8 @@
-using System;
 using System.Linq;
 using System.Collections.Generic;
 using API.Models.DTOModels;
 using API.Models.EntityModels;
 using API.Models.ViewModels;
-using API.Repositories;
-using API.Repositories.GameRepo;
 
 namespace API.Repositories.PlayerRepo
 {

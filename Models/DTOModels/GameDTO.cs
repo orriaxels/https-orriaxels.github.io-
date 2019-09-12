@@ -8,6 +8,6 @@ namespace API.Models.DTOModels
         public bool teamOneWin { get; set; }
         public bool teamTwoWin { get; set; }
         public bool draw { get; set; }
-        public string date { get; set; }
+        public DateTime date { get; set; }
     }
 }

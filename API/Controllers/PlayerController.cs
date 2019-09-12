@@ -32,7 +32,7 @@ namespace API.Controllers
 
         // GET api/values/5
         [HttpGet]
-        [Authorize]
+        //[Authorize]
         [Route("api/players", Name = "GetAllPlayers")]
         public IActionResult GetAllPlayers()
         {

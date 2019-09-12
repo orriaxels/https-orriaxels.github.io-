@@ -24,7 +24,6 @@ namespace API.Controllers
         public IActionResult GetAllGames()
         {
             IEnumerable<GameDTO> game;
-
             game = _gameService.getAllGames();
 
             return Ok(game);
