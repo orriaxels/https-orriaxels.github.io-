@@ -38,7 +38,7 @@ namespace API.Repositories.GameRepo
         public GameDTO addGame(GameViewModel newGame)
         {
             DateTime today = new DateTime(2019, 12,24,17,47,00);
-            today = today.Date;
+            
             var gameEntity = new Game
             {
                 date = today.Date,
@@ -90,7 +90,7 @@ namespace API.Repositories.GameRepo
                 losses = player.losses,
                 wins = player.wins,
                 name = player.name
-            };
+            }; 
 
             updatedPlayer.attented++;
             

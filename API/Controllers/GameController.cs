@@ -10,7 +10,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    public class GameController : Controller
+//    [Route("api/[controller]")]
+    //[ApiController]
+    public class GameController : ControllerBase
     {
         private IGameService _gameService;
 
@@ -21,7 +23,7 @@ namespace API.Controllers
 
         [HttpGet]
         [Route("api/games", Name = "GetAllGames")]
-        public IActionResult GetAllGames()
+        public ActionResult<IEnumerable<GameDTO>> Get()
         {
             IEnumerable<GameDTO> game;
             game = _gameService.getAllGames();

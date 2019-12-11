@@ -8,23 +8,35 @@ namespace API
 {
     public class Program
     {
+        
         public static void Main(string[] args)
-        {
-            var config = new ConfigurationBuilder().AddCommandLine(args).Build();
-            var host = new WebHostBuilder()
-                .UseKestrel()
-                .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseConfiguration(config)
-                .UseIISIntegration()
-                .UseStartup<Startup>()
-                .Build();
+		{
+			CreateWebHostBuilder(args).Build().Run();
+		}
 
-            host.Run();
-        }
+		public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+			WebHost.CreateDefaultBuilder(args)
+				.UseStartup<Startup>();
+        
+        // public static void Main(string[] args)
+        // {
+        
 
-        public static IWebHost BuildWebHost(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .Build();    
+        //     var config = new ConfigurationBuilder().AddCommandLine(args).Build();
+        //     var host = new WebHostBuilder()
+        //         .UseKestrel()
+        //         .UseContentRoot(Directory.GetCurrentDirectory())
+        //         .UseConfiguration(config)
+        //         .UseIISIntegration()
+        //         .UseStartup<Startup>()
+        //         .Build();
+
+        //     host.Run();
+        // }
+
+        // public static IWebHost BuildWebHost(string[] args) =>
+        //     WebHost.CreateDefaultBuilder(args)
+        //         .UseStartup<Startup>()
+        //         .Build();    
     }
 }

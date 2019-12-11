@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using API.Models.DTOModels;
 using API.Models.EntityModels;
 using API.Models.ViewModels;
+using System;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Repositories.PlayerRepo
 {
@@ -18,8 +20,11 @@ namespace API.Repositories.PlayerRepo
 
         public PlayerDTO addPlayer(PlayerViewModel newPlayer)
         {
+            var id = (from a in _db.Player select a.ID).Max() + 1;
+            
             var playerEntity = new Player
             {
+                ID = id,
                 name = newPlayer.name,
                 wins = 0,
                 losses = 0,

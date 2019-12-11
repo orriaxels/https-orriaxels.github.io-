@@ -3,6 +3,7 @@ using API.Models.EntityModels;
 using API.Models.DTOModels;
 using API.Models.ViewModels;
 using API.Repositories.PlayerRepo;
+using System;
 
 namespace API.Services.PlayerService
 {
@@ -17,8 +18,8 @@ namespace API.Services.PlayerService
 
         public PlayerDTO addPlayer(PlayerViewModel newPlayer)
         {
+            Console.WriteLine("here2!");
             var player = _playerRepository.addPlayer(newPlayer);
-
             return player;
         }
 

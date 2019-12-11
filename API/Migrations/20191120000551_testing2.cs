@@ -1,10 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using System;
-using System.Collections.Generic;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace API.Migrations
 {
-    public partial class db : Migration
+    public partial class testing2 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -14,10 +13,11 @@ namespace API.Migrations
                 {
                     ID = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    date = table.Column<string>(nullable: true),
-                    deleted = table.Column<bool>(nullable: false),
                     teamOneWin = table.Column<bool>(nullable: false),
-                    teamTwoWin = table.Column<bool>(nullable: false)
+                    teamTwoWin = table.Column<bool>(nullable: false),
+                    draw = table.Column<bool>(nullable: false),
+                    date = table.Column<DateTime>(nullable: false),
+                    deleted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -32,11 +32,12 @@ namespace API.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     gid = table.Column<int>(nullable: false),
                     pid = table.Column<int>(nullable: false),
+                    teamOneScore = table.Column<int>(nullable: false),
+                    teamTwoScore = table.Column<int>(nullable: false),
                     result = table.Column<string>(nullable: true),
                     teamOne = table.Column<bool>(nullable: false),
-                    teamOneScore = table.Column<int>(nullable: false),
                     teamTwo = table.Column<bool>(nullable: false),
-                    teamTwoScore = table.Column<int>(nullable: false)
+                    draw = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -49,14 +50,14 @@ namespace API.Migrations
                 {
                     ID = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    attented = table.Column<int>(nullable: false),
-                    deleted = table.Column<bool>(nullable: false),
-                    draws = table.Column<int>(nullable: false),
-                    gamesLost = table.Column<int>(nullable: false),
-                    gamesWon = table.Column<int>(nullable: false),
-                    losses = table.Column<int>(nullable: false),
                     name = table.Column<string>(nullable: true),
-                    wins = table.Column<int>(nullable: false)
+                    wins = table.Column<int>(nullable: false),
+                    losses = table.Column<int>(nullable: false),
+                    draws = table.Column<int>(nullable: false),
+                    gamesWon = table.Column<int>(nullable: false),
+                    gamesLost = table.Column<int>(nullable: false),
+                    attented = table.Column<int>(nullable: false),
+                    deleted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
