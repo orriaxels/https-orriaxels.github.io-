@@ -20,9 +20,7 @@ namespace API
         public Startup(IConfiguration configuration)
         {
             _config = configuration;
-        }
-
-        // readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+        }        
 
         public IConfiguration Configuration { get; }
 
@@ -30,17 +28,7 @@ namespace API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);;
-            // services.AddCors(options =>
-            // {
-            //     options.AddPolicy(MyAllowSpecificOrigins,
-            //         builder =>
-            //         {
-            //             builder.WithOrigins().AllowAnyHeader().AllowAnyOrigin();
-            //         });
-            // });
-
-
-
+         
             services.AddTransient<IPlayerService, PlayerService>();
             services.AddTransient<IPlayerRepository, PlayerRepository>();
             services.AddTransient<IGameRepository, GameRepository>();
@@ -65,6 +53,7 @@ namespace API
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseDatabaseErrorPage();
             }
             else
 			{

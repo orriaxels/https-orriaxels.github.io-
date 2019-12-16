@@ -53,35 +53,21 @@ namespace API.Repositories.PlayerRepo
 
         public IEnumerable<PlayerDTO> getAllPlayers()
         {
-            var x = new List<PlayerDTO> 
-            {
-                new PlayerDTO
-                {
-                    ID = 1,
-                    name = "test",
-                    wins = 2,
-                    losses = 3,
-                    draws = 1,
-                    gamesLost = 5,
-                    gamesWon = 2,
-                    attented = 3
-                }
-            };
-            // var player = (from p in _db.Player
-            //             where p.deleted != true
-            //             select new PlayerDTO
-            //             {
-            //                 ID = p.ID,
-            //                 name = p.name,
-            //                 wins = p.wins,
-            //                 losses = p.losses,
-            //                 draws = p.draws,
-            //                 gamesLost = p.gamesLost,
-            //                 gamesWon = p.gamesWon,
-            //                 attented = p.attented
-            //             }).ToList();
+            var player = (from p in _db.Player
+                        where p.deleted != true
+                        select new PlayerDTO
+                        {
+                            ID = p.ID,
+                            name = p.name,
+                            wins = p.wins,
+                            losses = p.losses,
+                            draws = p.draws,
+                            gamesLost = p.gamesLost,
+                            gamesWon = p.gamesWon,
+                            attented = p.attented
+                        }).ToList();
             
-            return x;
+            return player;
         }
 
         public PlayerDTO getPlayerById(int id)
