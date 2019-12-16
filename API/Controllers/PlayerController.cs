@@ -39,13 +39,12 @@ namespace API.Controllers
         }
 
         // GET api/values/5
-        [HttpGet]
-        //[Authorize]
+        [HttpGet]        
         [Route("api/players", Name = "GetAllPlayers")]
         public IActionResult GetAllPlayers()
         {
             IEnumerable<PlayerDTO> player;
-
+            Console.WriteLine("here! player");
             player = _playerService.getAllPlayers();
 
             return Ok(player);
