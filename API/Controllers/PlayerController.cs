@@ -25,7 +25,7 @@ namespace API.Controllers
         [Route("api/values/", Name = "GetValues")]
         public ActionResult<IEnumerable<string>> Get()
         {
-            return new string[] { "value10", "value2" };
+            return new string[] { "value10", "value2", "value3" };
         }
         
         // GET api/values
@@ -40,8 +40,8 @@ namespace API.Controllers
 
         // GET api/values/5
         [HttpGet]        
-        [Route("api/players", Name = "GetAllPlayers")]
-        public IActionResult GetAllPlayers()
+        [Route("api/players/", Name = "GetAllPlayers")]
+        public ActionResult GetAllPlayers()
         {
             IEnumerable<PlayerDTO> player;
             Console.WriteLine("here! player");
