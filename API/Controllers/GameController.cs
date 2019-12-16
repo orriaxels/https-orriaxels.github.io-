@@ -22,7 +22,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        [Route("api/games", Name = "GetAllGames")]
+        [Route("api/games/", Name = "GetAllGames")]
         public ActionResult<IEnumerable<GameDTO>> Get()
         {
             IEnumerable<GameDTO> game;

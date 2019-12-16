@@ -51,8 +51,8 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        [Route("api/players/{id:int}", Name = "GetPlayerById")]
-        public IActionResult GetPlayerById(int id)
+        [Route("api/players/{id:int}/", Name = "GetPlayerById")]
+        public ActionResult GetPlayerById(int id)
         {
             PlayerDTO player = _playerService.getPlayerById(id);
             
@@ -60,7 +60,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        [Route("api/players/{pid1:int}/{pid2:int}", Name = "GetTeammatesGames")]
+        [Route("api/players/{pid1:int}/{pid2:int}/", Name = "GetTeammatesGames")]
         public IActionResult GetTeammatesGames(int pid1, int pid2)
         {        
             TeammatesDTO games = _playerService.getTeammates(pid1, pid2);
@@ -69,7 +69,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        [Route("api/players/bestteammate/{pid:int}", Name = "GetBestTeammate")]
+        [Route("api/players/bestteammate/{pid:int}/", Name = "GetBestTeammate")]
         public IActionResult GetBestTeammate(int pid)
         {        
             TeammatesDTO games = _playerService.getBestTeammate(pid);
