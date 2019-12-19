@@ -6,7 +6,6 @@ namespace API.Models.ViewModels
 {
     public class GameViewModel
     {
-        public int ID { get; set; }
         public DateTime date { get; set; }
         public int teamOneScore { get; set; }
         public int teamTwoScore { get; set; }

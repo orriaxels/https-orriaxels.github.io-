@@ -2,10 +2,8 @@ using System.Collections.Generic;
 using API.Models.DTOModels;
 using API.Models.EntityModels;
 using API.Models.ViewModels;
-using API.Repositories;
 using System.Linq;
 using API.Repositories.PlayerRepo;
-using System;
 
 namespace API.Repositories.GameRepo
 {
@@ -36,12 +34,15 @@ namespace API.Repositories.GameRepo
         }
 
         public GameDTO addGame(GameViewModel newGame)
-        {
-            DateTime today = new DateTime(2019, 12,24,17,47,00);
-            
+        {             
+            var id = 1;
+            if(_db.Game.Any())         
+                id = (from a in _db.Game select a.ID).Max() + 1;
+
             var gameEntity = new Game
             {
-                date = today.Date,
+                ID = id,
+                date = newGame.date,
                 teamOneWin = false,
                 teamTwoWin = false,
                 draw = false,
@@ -67,7 +68,7 @@ namespace API.Repositories.GameRepo
             addGameInfo(newGame, gameEntity.ID);
             return new GameDTO
             {
-                ID = gameEntity.ID,
+                ID = id,
                 teamOneWin = gameEntity.teamOneWin,
                 teamTwoWin = gameEntity.teamTwoWin,
                 draw = gameEntity.draw,
@@ -96,8 +97,8 @@ namespace API.Repositories.GameRepo
             
             if(checkWhichTeam(pid, newGame))
             {
-                updatedPlayer.gamesWon = newGame.teamOneScore;
-                updatedPlayer.gamesLost = newGame.teamTwoScore;
+                updatedPlayer.gamesWon += newGame.teamOneScore;
+                updatedPlayer.gamesLost += newGame.teamTwoScore;
                 
                 if(newGame.teamOneScore > newGame.teamTwoScore)            
                     updatedPlayer.wins++;
@@ -106,8 +107,8 @@ namespace API.Repositories.GameRepo
             }
             else
             {
-                updatedPlayer.gamesWon = newGame.teamTwoScore;
-                updatedPlayer.gamesLost = newGame.teamOneScore;
+                updatedPlayer.gamesWon += newGame.teamTwoScore;
+                updatedPlayer.gamesLost += newGame.teamOneScore;
                 
                 if(newGame.teamTwoScore > newGame.teamOneScore) 
                     updatedPlayer.wins++;
@@ -132,11 +133,16 @@ namespace API.Repositories.GameRepo
         {
             var teamOne = newGame.teamOneList;
             var teamTwo = newGame.teamTwoList;
+
+            var id = 1;
+            if(_db.GamesWon.Any())         
+                id = (from a in _db.GamesWon select a.ID).Max() + 1;
             
             foreach(int pid in teamOne)
             {
                 var gameInfo = new GameInfo
                 {
+                    ID = id,
                     gid = gid,
                     pid = pid,
                     teamOneScore = newGame.teamOneScore,
@@ -146,7 +152,7 @@ namespace API.Repositories.GameRepo
                     teamTwo = false,
                     draw = false
                 };
-
+                id++;
                 updatePlayer(pid, newGame);
                 _db.GamesWon.Add(gameInfo);
             }
@@ -155,6 +161,7 @@ namespace API.Repositories.GameRepo
             {
                 var gameInfo = new GameInfo
                 {
+                    ID = id,
                     gid = gid,
                     pid = pid,
                     teamOneScore = newGame.teamOneScore,
@@ -164,6 +171,7 @@ namespace API.Repositories.GameRepo
                     teamTwo = true,
                     draw = false
                 };
+                id++;
                 updatePlayer(pid, newGame);
                 _db.GamesWon.Add(gameInfo);
             }

@@ -20,7 +20,9 @@ namespace API.Repositories.PlayerRepo
 
         public PlayerDTO addPlayer(PlayerViewModel newPlayer)
         {
-            var id = (from a in _db.Player select a.ID).Max() + 1;
+            int id = 1;
+            if(_db.Player.Any())
+                id = (from a in _db.Player select a.ID).Max() + 1;
             
             var playerEntity = new Player
             {
