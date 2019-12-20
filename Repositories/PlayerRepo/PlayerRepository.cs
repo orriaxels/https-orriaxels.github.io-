@@ -4,7 +4,8 @@ using API.Models.DTOModels;
 using API.Models.EntityModels;
 using API.Models.ViewModels;
 using System;
-using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
+
 
 namespace API.Repositories.PlayerRepo
 {
@@ -19,14 +20,9 @@ namespace API.Repositories.PlayerRepo
         }
 
         public PlayerDTO addPlayer(PlayerViewModel newPlayer)
-        {
-            int id = 1;
-            if(_db.Player.Any())
-                id = (from a in _db.Player select a.ID).Max() + 1;
-            
+        {           
             var playerEntity = new Player
             {
-                ID = id,
                 name = newPlayer.name,
                 wins = 0,
                 losses = 0,
@@ -42,7 +38,6 @@ namespace API.Repositories.PlayerRepo
 
             return new PlayerDTO
             {
-                ID = playerEntity.ID,
                 name = playerEntity.name,
                 wins = playerEntity.wins,
                 losses = playerEntity.losses,
@@ -70,10 +65,10 @@ namespace API.Repositories.PlayerRepo
                         }).ToList();
             
             return player;
-        }
+        }        
 
         public PlayerDTO getPlayerById(int id)
-        {
+        {            
             var player = (from p in _db.Player
                         where p.ID == id && p.deleted == false
                         select new PlayerDTO
@@ -91,17 +86,33 @@ namespace API.Repositories.PlayerRepo
             return player;
         }
 
+        private string getPlayerName(int id)
+        {
+            var x = _db.Player.Find(id);
+
+            return x.name;
+        }
+
         public TeammatesDTO getTeammates(int pid1, int pid2) 
         {
+            var total = Stopwatch.StartNew();
             int wins = 0;
             int losses = 0;
+            
+            var SWgetPlayerById = Stopwatch.StartNew();
+            var p1 = getPlayerName(pid1);
+            var p2 = getPlayerName(pid2);
+            SWgetPlayerById.Stop();
+            Console.WriteLine();
+            Console.WriteLine("----------------------------------------------");
+            Console.WriteLine(p1 + " og " + p2);
 
-            var p1 = getPlayerById(pid1);
-            var p2 = getPlayerById(pid2);
-
+            var SWgetAllGameInfoByPid = Stopwatch.StartNew();
             var pid1Games = getAllGameInfoByPid(pid1);
             var pid2Games = getAllGameInfoByPid(pid2);
+            SWgetAllGameInfoByPid.Stop();
 
+            var SWgame = Stopwatch.StartNew();
             var games = (from g1 in pid1Games join g2 in pid2Games
                         on g1.gid equals g2.gid
                         where (g1.teamOne == true && g2.teamOne == true) || (g1.teamTwo == true && g2.teamTwo == true)
@@ -114,82 +125,96 @@ namespace API.Repositories.PlayerRepo
                             teamTwo = g1.teamTwo,
                             victory = false
                         }).ToList();
-        
-            foreach(TeammatesGames g in games)
-            {
-                g.teamOneList = getTeamOneList(g);
-                g.teamTwoList = getTeamTwoList(g);
-                
-                if(g.teamOne)
+            SWgame.Stop();
+
+            var SWgameInGame = Stopwatch.StartNew();
+            foreach(TeammatesGames game in games)
+            {                
+                var getTeamList1 = Stopwatch.StartNew();
+                game.teamOneList = getTeamOneList(game.gid);
+                getTeamList1.Stop();
+               
+                game.teamTwoList = getTeamTwoList(game.gid);
+
+                Console.WriteLine("get teamList1: {0}", getTeamList1.Elapsed); 
+
+                if(game.teamOne)
                 {
-                    if(g.teamOneScore > g.teamTwoScore)
+                    if(game.teamOneScore > game.teamTwoScore)
                     {
-                        g.victory = true;
+                        game.victory = true;
                         wins++;                  
                     }                
                     else
                     {
-                        g.victory = false;
                         losses++;
                     }
                 }
-                else if(g.teamTwo)
+                else
                 {
-                    if(g.teamTwoScore > g.teamOneScore)
+                    if(game.teamTwoScore > game.teamOneScore)
                     {
-                        g.victory = true;
+                        game.victory = true;
                         wins++;
                     }
                     else
                     {
-                        g.victory = false;
                         losses++;
                     }
                 }
             }
+            SWgameInGame.Stop();
 
             var teammates = new TeammatesDTO
             {
-                p1 = p1.name,
-                p2 = p2.name,
+                p1 = p1,
+                p2 = p2,
                 wins = wins,
                 losses = losses,
                 count = games.Count,
                 TeammatesGames = games
             };
+            total.Stop();
+            
+
+            Console.WriteLine("getPlayerById: {0}", SWgetPlayerById.Elapsed); 
+            Console.WriteLine("getAllGameInfoByPid: {0}", SWgetAllGameInfoByPid.Elapsed); 
+            Console.WriteLine("get games: {0}", SWgame.Elapsed); 
+            Console.WriteLine("foreach game in games: {0}", SWgameInGame.Elapsed); 
+            Console.WriteLine("Total time: {0}", total.Elapsed); 
+            Console.WriteLine("----------------------------------------------");
+            Console.WriteLine();
 
             return teammates;
         }
 
-        public List<string> getTeamOneList(TeammatesGames model)
+        public List<string> getTeamOneList(int gid)
         {
             var nameList = new List<string>();
 
             var pidList = (from g in _db.GamesWon
-                        where (g.gid == model.gid && g.teamOne == true)
+                        where (g.gid == gid && g.teamOne == true)
                         select g.pid).ToList();
 
-            foreach(int l in pidList)
+            foreach(var l in pidList)
             {
-                var player = getPlayerById(l);
-                nameList.Add(player.name);                
+                nameList.Add(getPlayerName(l));
             }
 
             return nameList;
         }
 
-        public List<string> getTeamTwoList(TeammatesGames model)
+        public List<string> getTeamTwoList(int gid)
         {
             var nameList = new List<string>();
 
             var pidList = (from g in _db.GamesWon
-                        where (g.gid == model.gid && g.teamTwo == true)
+                        where (g.gid == gid && g.teamTwo == true)
                         select g.pid).ToList();
 
-            foreach(int l in pidList)
+            foreach(var l in pidList)
             {
-                var player = getPlayerById(l);
-                nameList.Add(player.name);                
+                nameList.Add(getPlayerName(l));                
             }
 
             return nameList;
@@ -198,7 +223,7 @@ namespace API.Repositories.PlayerRepo
 
         // helper function to find gameInfoByPid
         public IEnumerable<GameInfoDTO> getAllGameInfoByPid(int pid)
-        {
+        {            
             var gameInfo = (from g in _db.GamesWon
                             where pid == g.pid
                             select new GameInfoDTO
@@ -228,7 +253,7 @@ namespace API.Repositories.PlayerRepo
 
         public void deletePlayer(int id)
         {
-            var player = _db.Player.Where(p => p.ID == id).SingleOrDefault();
+            var player = _db.Player.Find(id);
             if(player != null)
             {
                 player.deleted = true;
@@ -238,13 +263,12 @@ namespace API.Repositories.PlayerRepo
 
         public TeammatesDTO getBestTeammate(int pid)
         {
-            var nrOfPlayers = getAllPlayers();
-            var player = getPlayerById(pid);
+            int nrOfPlayers = getNrOfPlayers();
 
             var wins = 0;
             TeammatesDTO tempTeammates = new TeammatesDTO();
 
-            for(int i = 1; i <= nrOfPlayers.Count(); i++)
+            for(int i = 1; i <= nrOfPlayers; i++)
             {
                 if(i == pid)
                     continue;
@@ -263,13 +287,12 @@ namespace API.Repositories.PlayerRepo
 
         public TeammatesDTO getWorstTeammate(int pid)
         {
-            var nrOfPlayers = getAllPlayers();
-            var player = getPlayerById(pid);
+            int nrOfPlayers = getNrOfPlayers();
 
             var losses = 0;
             TeammatesDTO tempTeammates = new TeammatesDTO();
 
-            for(int i = 1; i <= nrOfPlayers.Count(); i++)
+            for(int i = 1; i <= nrOfPlayers; i++)
             {
                 if(i == pid)
                     continue;
@@ -288,15 +311,17 @@ namespace API.Repositories.PlayerRepo
 
         public TeammatesDTO overallBestTeammates()
         {
-            var nrOfPlayers = getAllPlayers();
+            var totaltime = Stopwatch.StartNew();
+            int nrOfPlayers = getNrOfPlayers();            
 
             var wins = 0;
             TeammatesDTO tempTeammates = new TeammatesDTO();
-            for(int i = 1; i <= nrOfPlayers.Count(); i++)
-            {
-                for(int j = 1; j <= nrOfPlayers.Count(); j++)
+            for(int i = 1; i <= nrOfPlayers; i++)
+            {                
+                var stopwatch = Stopwatch.StartNew();
+                for(int j = 1; j <= nrOfPlayers; j++)
                 {   
-                    if(i == j)
+                    if(i == j || j < i)
                         continue;
                     
                     var games = getTeammates(i, j);
@@ -307,23 +332,30 @@ namespace API.Repositories.PlayerRepo
                         tempTeammates = games;
                     }
                 }
+                stopwatch.Stop();
+                
+                Console.WriteLine("id: {0} - {1}", i, stopwatch.Elapsed);                 
             }
 
-
+            totaltime.Stop();
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine("-------------------------------");
+            Console.WriteLine("Total time: {0}", totaltime.Elapsed);                 
             return tempTeammates;
         }
 
         public TeammatesDTO overallWorstTeammates()
         {
-            var nrOfPlayers = getAllPlayers();
+            int nrOfPlayers = getNrOfPlayers();
 
             var losses = 0;
             TeammatesDTO tempTeammates = new TeammatesDTO();
-            for(int i = 1; i <= nrOfPlayers.Count(); i++)
+            for(int i = 1; i <= nrOfPlayers; i++)
             {
-                for(int j = 1; j <= nrOfPlayers.Count(); j++)
+                for(int j = 1; j <= nrOfPlayers; j++)
                 {   
-                    if(i == j)
+                    if(i == j || j < i)
                         continue;
                     
                     var games = getTeammates(i, j);
@@ -337,6 +369,11 @@ namespace API.Repositories.PlayerRepo
             }
 
             return tempTeammates;
+        }
+
+        private int getNrOfPlayers()
+        {            
+            return _db.Player.ToList().Count;
         }
     }
 }

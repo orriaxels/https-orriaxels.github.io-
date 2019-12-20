@@ -10,8 +10,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-//    [Route("api/[controller]")]
-    //[ApiController]
     public class GameController : ControllerBase
     {
         private IGameService _gameService;

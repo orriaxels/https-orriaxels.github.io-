@@ -1,9 +1,10 @@
 ﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace API.Migrations
 {
-    public partial class testing2 : Migration
+    public partial class updateGamestest : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,10 +13,12 @@ namespace API.Migrations
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     teamOneWin = table.Column<bool>(nullable: false),
                     teamTwoWin = table.Column<bool>(nullable: false),
                     draw = table.Column<bool>(nullable: false),
+                    teamOneList = table.Column<string>(nullable: true),
+                    teamTwoList = table.Column<string>(nullable: true),
                     date = table.Column<DateTime>(nullable: false),
                     deleted = table.Column<bool>(nullable: false)
                 },
@@ -29,7 +32,7 @@ namespace API.Migrations
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     gid = table.Column<int>(nullable: false),
                     pid = table.Column<int>(nullable: false),
                     teamOneScore = table.Column<int>(nullable: false),
@@ -49,7 +52,7 @@ namespace API.Migrations
                 columns: table => new
                 {
                     ID = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     name = table.Column<string>(nullable: true),
                     wins = table.Column<int>(nullable: false),
                     losses = table.Column<int>(nullable: false),

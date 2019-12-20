@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers
 {
-    //[Route("api/[controller]")]
     public class PlayerController : ControllerBase
     {
         private IPlayerService _playerService;
@@ -28,23 +27,20 @@ namespace API.Controllers
             return new string[] { "value10", "value2", "value3" };
         }
         
-        // GET api/values
         [HttpPost]
         [Route("api/players/", Name = "AddPlayer")]
         public IActionResult AddPlayer([FromBody]PlayerViewModel newPlayer)
         {
-            Console.WriteLine("here!");
             var player = _playerService.addPlayer(newPlayer);
+
             return Ok(player);
         }
 
-        // GET api/values/5
         [HttpGet]        
         [Route("api/players/", Name = "GetAllPlayers")]
         public ActionResult GetAllPlayers()
         {
             IEnumerable<PlayerDTO> player;
-            Console.WriteLine("here! player");
             player = _playerService.getAllPlayers();
 
             return Ok(player);

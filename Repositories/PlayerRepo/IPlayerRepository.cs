@@ -14,7 +14,7 @@ namespace API.Repositories.PlayerRepo
         void deletePlayer(int id);
         
         // Gets all games where pid1 & pid2 are in the same team
-        TeammatesDTO getTeammates(int pid, int pid2);
+        TeammatesDTO getTeammates(int pid1, int pid2);
 
         // Gets best teammate for a chosen player overall and all their games
         TeammatesDTO getBestTeammate(int pid);

@@ -10,12 +10,10 @@ namespace API.Repositories.GameRepo
     public class GameRepository : IGameRepository
     {
         private AppDataContext _db;
-        private IPlayerRepository _playerRepo;
 
-        public GameRepository(AppDataContext db, IPlayerRepository playerRepo)
+        public GameRepository(AppDataContext db)
         {
             _db = db;
-            _playerRepo = playerRepo;
         }
 
         public IEnumerable<GameDTO> getAllGames()
@@ -35,16 +33,13 @@ namespace API.Repositories.GameRepo
 
         public GameDTO addGame(GameViewModel newGame)
         {             
-            var id = 1;
-            if(_db.Game.Any())         
-                id = (from a in _db.Game select a.ID).Max() + 1;
-
             var gameEntity = new Game
             {
-                ID = id,
                 date = newGame.date,
                 teamOneWin = false,
                 teamTwoWin = false,
+                teamOneList = "",
+                teamTwoList = "",
                 draw = false,
                 deleted = false
             };
@@ -67,56 +62,43 @@ namespace API.Repositories.GameRepo
 
             addGameInfo(newGame, gameEntity.ID);
             return new GameDTO
-            {
-                ID = id,
+            {                
                 teamOneWin = gameEntity.teamOneWin,
                 teamTwoWin = gameEntity.teamTwoWin,
                 draw = gameEntity.draw,
+                teamOneList = gameEntity.teamOneList,
+                teamTwoList = gameEntity.teamTwoList,
                 date = gameEntity.date            
             };
         }
 
         public void updatePlayer(int pid, GameViewModel newGame)
         {
-            var player = _playerRepo.getPlayerById(pid);
+            var player = _db.Player.Find(pid);
 
-            var updatedPlayer = new Player
-            {
-                ID = pid,
-                attented = player.attented,
-                deleted = false,
-                draws = player.draws,
-                gamesLost = player.gamesLost,
-                gamesWon = player.gamesWon,
-                losses = player.losses,
-                wins = player.wins,
-                name = player.name
-            }; 
-
-            updatedPlayer.attented++;
-            
             if(checkWhichTeam(pid, newGame))
             {
-                updatedPlayer.gamesWon += newGame.teamOneScore;
-                updatedPlayer.gamesLost += newGame.teamTwoScore;
+                player.gamesWon += newGame.teamOneScore;
+                player.gamesLost += newGame.teamTwoScore;
                 
-                if(newGame.teamOneScore > newGame.teamTwoScore)            
-                    updatedPlayer.wins++;
+                if(newGame.teamOneScore > newGame.teamTwoScore)
+                    player.wins++;
                 else
-                    updatedPlayer.losses++;                
+                    player.losses++;                
             }
             else
             {
-                updatedPlayer.gamesWon += newGame.teamTwoScore;
-                updatedPlayer.gamesLost += newGame.teamOneScore;
+                player.gamesWon += newGame.teamTwoScore;
+                player.gamesLost += newGame.teamOneScore;
                 
                 if(newGame.teamTwoScore > newGame.teamOneScore) 
-                    updatedPlayer.wins++;
+                    player.wins++;
                 else
-                    updatedPlayer.losses++;                
+                    player.losses++;                
             }
 
-            _playerRepo.editPlayer(updatedPlayer);
+            player.attented++;
+            _db.Player.Update(player);
         }
 
         public bool checkWhichTeam(int pid, GameViewModel newGame)
@@ -133,16 +115,11 @@ namespace API.Repositories.GameRepo
         {
             var teamOne = newGame.teamOneList;
             var teamTwo = newGame.teamTwoList;
-
-            var id = 1;
-            if(_db.GamesWon.Any())         
-                id = (from a in _db.GamesWon select a.ID).Max() + 1;
             
             foreach(int pid in teamOne)
             {
                 var gameInfo = new GameInfo
                 {
-                    ID = id,
                     gid = gid,
                     pid = pid,
                     teamOneScore = newGame.teamOneScore,
@@ -152,7 +129,6 @@ namespace API.Repositories.GameRepo
                     teamTwo = false,
                     draw = false
                 };
-                id++;
                 updatePlayer(pid, newGame);
                 _db.GamesWon.Add(gameInfo);
             }
@@ -161,7 +137,6 @@ namespace API.Repositories.GameRepo
             {
                 var gameInfo = new GameInfo
                 {
-                    ID = id,
                     gid = gid,
                     pid = pid,
                     teamOneScore = newGame.teamOneScore,
@@ -171,13 +146,11 @@ namespace API.Repositories.GameRepo
                     teamTwo = true,
                     draw = false
                 };
-                id++;
                 updatePlayer(pid, newGame);
                 _db.GamesWon.Add(gameInfo);
             }
             
             _db.SaveChanges();
-            
         }
 
         public GameDTO getGameById(int id)
