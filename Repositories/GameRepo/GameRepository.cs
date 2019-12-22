@@ -47,7 +47,7 @@ namespace API.Repositories.GameRepo
             if(newGame.teamOneScore > newGame.teamTwoScore)
             {
                 gameEntity.teamOneWin = true;
-            }
+                }
             else if(newGame.teamOneScore < newGame.teamTwoScore)
             {
                 gameEntity.teamTwoWin = true;
@@ -77,25 +77,34 @@ namespace API.Repositories.GameRepo
             var player = _db.Player.Find(pid);
 
             if(checkWhichTeam(pid, newGame))
-            {
-                player.gamesWon += newGame.teamOneScore;
-                player.gamesLost += newGame.teamTwoScore;
-                
+            {                
                 if(newGame.teamOneScore > newGame.teamTwoScore)
+                {
                     player.wins++;
+                    player.lastFive += "w,";
+                }
                 else
+                {
                     player.losses++;                
+                    player.lastFive += "l,";
+                }
             }
             else
-            {
-                player.gamesWon += newGame.teamTwoScore;
-                player.gamesLost += newGame.teamOneScore;
-                
+            {                
                 if(newGame.teamTwoScore > newGame.teamOneScore) 
+                {
                     player.wins++;
+                    player.lastFive += "w,";
+                }
                 else
+                {
                     player.losses++;                
+                    player.lastFive += "l,";
+                }
             }
+
+            player.gamesWon += newGame.teamOneScore;
+            player.gamesLost += newGame.teamTwoScore;
 
             player.attented++;
             _db.Player.Update(player);

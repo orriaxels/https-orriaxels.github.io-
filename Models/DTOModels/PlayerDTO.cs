@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace API.Models.DTOModels
 {
@@ -12,5 +13,6 @@ namespace API.Models.DTOModels
         public int gamesWon { get; set; }
         public int gamesLost { get; set; }
         public int attented { get; set; }
+        public string lastFive { get; set; }
     }
 }

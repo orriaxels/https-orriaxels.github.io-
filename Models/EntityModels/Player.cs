@@ -12,6 +12,7 @@ namespace API.Models.EntityModels
         public int gamesWon { get; set; }
         public int gamesLost { get; set; }
         public int attented { get; set; }
+        public string lastFive { get; set; }
         public bool deleted { get; set; }
     }
 }

@@ -87,6 +87,8 @@ namespace API.Migrations
 
                     b.Property<int>("gamesWon");
 
+                    b.Property<string>("lastFive");
+
                     b.Property<int>("losses");
 
                     b.Property<string>("name");

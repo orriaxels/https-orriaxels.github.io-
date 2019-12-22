@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Migrations
 {
     [DbContext(typeof(AppDataContext))]
-    [Migration("20191219233029_updateGamestest")]
-    partial class updateGamestest
+    [Migration("20191222212231_lastfive")]
+    partial class lastfive
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -88,6 +88,8 @@ namespace API.Migrations
                     b.Property<int>("gamesLost");
 
                     b.Property<int>("gamesWon");
+
+                    b.Property<string>("lastFive");
 
                     b.Property<int>("losses");
 

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace API.Migrations
 {
-    public partial class updateGamestest : Migration
+    public partial class lastfive : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -60,6 +60,7 @@ namespace API.Migrations
                     gamesWon = table.Column<int>(nullable: false),
                     gamesLost = table.Column<int>(nullable: false),
                     attented = table.Column<int>(nullable: false),
+                    lastFive = table.Column<string>(nullable: true),
                     deleted = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>

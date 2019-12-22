@@ -30,6 +30,7 @@ namespace API.Repositories.PlayerRepo
                 attented = 0,
                 gamesLost = 0,
                 gamesWon = 0,
+                lastFive = "",
                 deleted = false,
             };
 
@@ -44,7 +45,8 @@ namespace API.Repositories.PlayerRepo
                 draws = playerEntity.draws,
                 attented = playerEntity.attented,
                 gamesLost = playerEntity.gamesLost,
-                gamesWon = playerEntity.gamesWon
+                gamesWon = playerEntity.gamesWon,
+                lastFive = ""
             };
         }
 
@@ -61,7 +63,8 @@ namespace API.Repositories.PlayerRepo
                             draws = p.draws,
                             gamesLost = p.gamesLost,
                             gamesWon = p.gamesWon,
-                            attented = p.attented
+                            attented = p.attented,
+                            lastFive = p.lastFive
                         }).ToList();
             
             return player;
