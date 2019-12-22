@@ -83,7 +83,8 @@ namespace API.Repositories.PlayerRepo
                             draws = p.draws,
                             gamesLost = p.gamesLost,
                             gamesWon = p.gamesWon,
-                            attented = p.attented
+                            attented = p.attented,
+                            lastFive = p.lastFive
                         }).SingleOrDefault();
             
             return player;
