@@ -33,13 +33,17 @@ namespace API.Repositories.GameRepo
 
         public GameDTO addGame(GameViewModel newGame)
         {             
+
+            var t1List = string.Join(";", newGame.teamOneList);
+            var t2List = string.Join(";", newGame.teamTwoList);
+
             var gameEntity = new Game
             {
                 date = newGame.date,
                 teamOneWin = false,
                 teamTwoWin = false,
-                teamOneList = "",
-                teamTwoList = "",
+                teamOneList = t1List,
+                teamTwoList = t2List,
                 draw = false,
                 deleted = false
             };
@@ -47,7 +51,7 @@ namespace API.Repositories.GameRepo
             if(newGame.teamOneScore > newGame.teamTwoScore)
             {
                 gameEntity.teamOneWin = true;
-                }
+            }
             else if(newGame.teamOneScore < newGame.teamTwoScore)
             {
                 gameEntity.teamTwoWin = true;
