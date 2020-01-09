@@ -307,7 +307,7 @@ namespace API.Repositories.PlayerRepo
 
             foreach(var pid in playersId)
             {
-                tempTeammates = getWorstTeammate(pid)
+                tempTeammates = getWorstTeammate(pid);
             }
 
             return tempTeammates;
